@@ -1,0 +1,14 @@
+#!/bin/bash
+
+/bin/chmod 777 /var/www/bootstrap -Rf
+/bin/chmod 777 /var/www/storage -Rf
+
+/bin/rm -Rf /etc/supervisord.d/vault.ini
+
+/bin/sed -ri "s!#DD_SERVICE!$DD_SERVICE!g" /etc/httpd/conf.d/php.conf
+/bin/sed -ri "s!#DD_ENV!$DD_ENV!g" /etc/httpd/conf.d/php.conf
+/bin/sed -ri "s!#DD_VERSION!$DD_VERSION!g" /etc/httpd/conf.d/php.conf
+/bin/sed -ri "s!#DD_AGENT_HOST!$DD_AGENT_HOST!g" /etc/httpd/conf.d/php.conf
+/bin/sed -ri "s!#DD_TAGS!$DD_TAGS!g" /etc/httpd/conf.d/php.conf
+
+/usr/bin/supervisord -c /etc/supervisord.conf

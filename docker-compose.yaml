@@ -1,0 +1,45 @@
+version: '3.6'
+
+#Docker services
+services:
+  teste_talk_db:
+    image: postgres:12
+    restart: always
+    ports:
+      - "5441:5432"
+    volumes:
+      - talk_db_data:/var/lib/postgresql/data
+      - ./.conteiners/postgres:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=api_teste_talk
+      - PGDATA=/var/lib/postgresql/data/db-files/
+    networks:
+      - teste_talk
+
+  teste_talk:
+    build:
+      context: .
+    entrypoint: /usr/sbin/entrypoint.local
+    container_name: teste_talk
+    ports:
+      - "8019:80"
+    networks:
+      - teste_talk
+    volumes:
+      - .:/var/www
+      - ~/.ssh:/root/.ssh:ro
+    depends_on:
+      - teste_talk_db
+
+#Docker networks
+networks:
+  teste_talk:
+    name: teste_talk_network
+    driver: bridge
+
+#Docker volumes
+volumes:
+  talk_db_data:
+    driver: local

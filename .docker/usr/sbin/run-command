@@ -1,0 +1,11 @@
+#!/bin/bash
+
+/usr/bin/vault agent -config=/etc/vault-agent/agent-config-one-execution.hcl -log-level=debug
+
+/bin/chmod 777 /var/www/storage -Rf
+/usr/bin/php /var/www/artisan doctrine:generate:proxies
+
+/bin/chmod 777 /var/www/bootstrap -Rf
+/bin/chmod 777 /var/www/storage -Rf
+
+/usr/bin/php /var/www/artisan $*
